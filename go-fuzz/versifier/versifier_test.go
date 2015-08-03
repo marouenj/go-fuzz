@@ -11,7 +11,7 @@ func dump(data string) {
 }
 
 func TestNumber(t *testing.T) {
-	dump(`abc -10 def 0xab1 0x123 1e10 asd 1e2 22e-78 -11e72`)
+	dump(`abc \abc -10 \-10 def 0xab1 0x123 1e10 asd 1e2 22e-78 -11e72`)
 }
 
 func TestList1(t *testing.T) {
@@ -23,7 +23,7 @@ func TestList2(t *testing.T) {
 }
 
 func TestBracket(t *testing.T) {
-	dump(`[] [afal] (  ) (afaf)`)
+	dump(`[] [afal] \[afal] (  ) \(  ) (afaf)`)
 }
 
 func TestKeyValue(t *testing.T) {
