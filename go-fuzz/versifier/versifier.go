@@ -592,6 +592,7 @@ func structure(nn []Node) []Node {
 	nn = structureKeyValue(nn)
 	nn = structureLists(nn)
 	nn = structureLines(nn)
+	nn = structureConstants(nn)
 	return nn
 }
 
@@ -922,4 +923,28 @@ func structureLines(nn []Node) (res []Node) {
 		res = append(res, nn...)
 	}
 	return res
+}
+
+func structureConstants(nn []Node) (res []Node) {
+	escape := map[rune]bool{'\\': true}
+	for _, n := range nn {
+		if brk, ok := n.(*BracketNode); ok {
+			brk.b.nodes = structureConstants(brk.b.nodes)
+		}
+	}
+
+	for i := 0; i < len(nn)-1; i++ {
+		n := nn[i]
+		ctrl, ok := n.(*ControlNode)
+		if !ok {
+			continue
+		}
+		if escape[ctrl.ch] {
+			nn[i+1] = &ConstantNode{nn[i+1]}
+			copy(nn[i:], nn[i+1:])
+			nn = nn[:len(nn)-1]
+		}
+	}
+	// TODO: consider what to do if the last block is an escape character
+	return nn
 }
