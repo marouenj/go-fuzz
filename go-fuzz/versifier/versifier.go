@@ -405,6 +405,24 @@ func (n *LineNode) Generate(w io.Writer, v *Verse) {
 	}
 }
 
+type ConstantNode struct {
+	node Node
+}
+
+func (n *ConstantNode) Visit(f func(n Node)) {
+	f(n)
+	n.node.Visit(f)
+}
+
+func (n *ConstantNode) Print(w io.Writer, ident int) {
+	fmt.Fprintf(w, "%sconst\n", strings.Repeat("  ", ident))
+	n.node.Print(w, ident+1)
+}
+
+func (n *ConstantNode) Generate(w io.Writer, v *Verse) {
+	// does nothing
+}
+
 type BlockNode struct {
 	nodes []Node
 }
